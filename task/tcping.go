@@ -2,14 +2,12 @@ package task
 
 import (
 	"fmt"
-	"github.com/fireinrain/cf-speedtester/config"
 	"github.com/fireinrain/cf-speedtester/entity"
+	"github.com/fireinrain/cf-speedtester/utils"
 	"net"
 	"sort"
 	"sync"
 	"time"
-
-	"github.com/fireinrain/cf-speedtester/utils"
 )
 
 const (
@@ -29,13 +27,13 @@ type Ping struct {
 
 func checkPingDefault(testConfig *entity.TestOptions) {
 	if testConfig.Routines <= 0 || testConfig.Routines > MaxRoutine {
-		testConfig.Routines = config.DefaultRoutines
+		testConfig.Routines = testConfig.DefaultValues.DefaultRoutines
 	}
 	if testConfig.TCPPort <= 0 || testConfig.TCPPort >= 65535 {
-		testConfig.TCPPort = config.DefaultTCPPort
+		testConfig.TCPPort = testConfig.DefaultValues.DefaultTCPPort
 	}
 	if testConfig.PingTimes <= 0 {
-		testConfig.PingTimes = config.DefaultPingTimes
+		testConfig.PingTimes = testConfig.DefaultValues.DefaultPingTimes
 	}
 
 }

@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"github.com/VividCortex/ewma"
-	"github.com/fireinrain/cf-speedtester/config"
 	"github.com/fireinrain/cf-speedtester/entity"
 	"github.com/fireinrain/cf-speedtester/utils"
 	"io"
@@ -20,16 +19,16 @@ const (
 
 func checkDownloadDefault(globalConfig *entity.TestOptions) {
 	if globalConfig.DownloadUrl == "" {
-		globalConfig.DownloadUrl = config.DefaultDownloadURL
+		globalConfig.DownloadUrl = globalConfig.DefaultValues.DefaultDownloadURL
 	}
 	if globalConfig.Timeout <= 0 {
-		globalConfig.Timeout = config.DefaultTimeout
+		globalConfig.Timeout = globalConfig.DefaultValues.DefaultTimeout
 	}
 	if globalConfig.TestCount <= 0 {
-		globalConfig.TestCount = config.DefaultTestCount
+		globalConfig.TestCount = globalConfig.DefaultValues.DefaultTestCount
 	}
 	if globalConfig.MinSpeed <= 0.0 {
-		globalConfig.MinSpeed = config.DefaultMinSpeed
+		globalConfig.MinSpeed = globalConfig.DefaultValues.DefaultMinSpeed
 	}
 }
 
