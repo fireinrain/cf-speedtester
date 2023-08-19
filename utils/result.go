@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/csv"
-	"fmt"
 	"github.com/fireinrain/cf-speedtester/entity"
 	"log"
 	"net"
@@ -161,7 +160,7 @@ func (s DownloadSpeedSet) Swap(i, j int) {
 //	@receiver s
 func (s DownloadSpeedSet) PrettyPrint() {
 	if len(s) <= 0 { // IP数组长度(IP数量) 大于 0 时继续
-		fmt.Println("\n[信息] 完整测速结果 IP 数量为 0，跳过输出结果。")
+		log.Println("完整测速结果 IP 数量为 0，跳过输出结果.")
 		return
 	}
 	dateString := ConvertToString(s) // 转为多维数组 [][]String
@@ -177,9 +176,9 @@ func (s DownloadSpeedSet) PrettyPrint() {
 			break
 		}
 	}
-	fmt.Printf(headFormat, "IP 地址", "已发送", "已接收", "丢包率", "平均延迟", "下载速度 (MB/s)")
+	log.Printf(headFormat, "IP 地址", "已发送", "已接收", "丢包率", "平均延迟", "下载速度 (MB/s)")
 	for i := 0; i < PrintNum; i++ {
-		fmt.Printf(dataFormat, dateString[i][0], dateString[i][1], dateString[i][2], dateString[i][3], dateString[i][4], dateString[i][5])
+		log.Printf(dataFormat, dateString[i][0], dateString[i][1], dateString[i][2], dateString[i][3], dateString[i][4], dateString[i][5])
 	}
 }
 

@@ -7,6 +7,7 @@ import (
 	"github.com/fireinrain/cf-speedtester/entity"
 	"github.com/fireinrain/cf-speedtester/utils"
 	"io"
+	"log"
 	"net"
 	"net/http"
 	"sort"
@@ -38,7 +39,7 @@ func TestDownloadSpeed(ipSet utils.PingDelaySet, globalConfig *entity.TestOption
 		return utils.DownloadSpeedSet(ipSet)
 	}
 	if len(ipSet) <= 0 { // IP数组长度(IP数量) 大于 0 时才会继续下载测速
-		fmt.Println("\n[信息] 延迟测速结果 IP 数量为 0，跳过下载测速。")
+		log.Println("延迟测速结果 IP 数量为 0，跳过下载测速.")
 		return
 	}
 	testNum := globalConfig.TestCount
@@ -48,8 +49,8 @@ func TestDownloadSpeed(ipSet utils.PingDelaySet, globalConfig *entity.TestOption
 	if testNum < globalConfig.TestCount {
 		globalConfig.TestCount = testNum
 	}
-
-	fmt.Printf("开始下载测速（下载速度下限：%.2f MB/s，下载测速数量：%d，下载测速队列：%d）：\n", globalConfig.MinSpeed, globalConfig.TestCount, testNum)
+	message := fmt.Sprintf("开始下载测速（下载速度下限：%.2f MB/s，下载测速数量：%d，下载测速队列：%d）：\n", globalConfig.MinSpeed, globalConfig.TestCount, testNum)
+	log.Println(message)
 
 	for i := 0; i < testNum; i++ {
 		speed := downloadHandler(ipSet[i].IP, globalConfig)
