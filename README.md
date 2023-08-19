@@ -21,7 +21,7 @@ import (
 ## simple use(use cloudflare official cdn ips)
 ```go
 
-client := NewCFSpeedTestClient(
+client := cf_speedtester.NewCFSpeedTestClient(
 		config.WithMaxDelay(300*time.Millisecond),
 		config.WithMinSpeed(2),
 		config.WithTestCount(5),
@@ -37,7 +37,7 @@ fmt.Println(results)
 ## export data to cvs
 ```go
 
-client := NewCFSpeedTestClient(
+client := cf_speedtester.NewCFSpeedTestClient(
 		config.WithMaxDelay(300*time.Millisecond),
 		config.WithMinSpeed(2),
 		config.WithTestCount(5),
@@ -72,7 +72,7 @@ for _, ip := range ips {
     ipList = append(ipList, addr)
 }
 
-client := NewCFSpeedTestClient(
+client := cf_speedtester.NewCFSpeedTestClient(
     config.WithMaxDelay(300*time.Millisecond),
     config.WithMinSpeed(2),
     config.WithTestCount(1),
