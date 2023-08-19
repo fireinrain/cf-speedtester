@@ -95,7 +95,7 @@ func (s PingDelaySet) FilterDelay(globalConfig *entity.TestOptions) (data PingDe
 		}
 		data = append(data, v) // 延迟满足条件时，添加到新数组中
 	}
-	return
+	return data
 }
 
 // FilterLossRate
@@ -114,7 +114,7 @@ func (s PingDelaySet) FilterLossRate(globalConfig *entity.TestOptions) (data Pin
 		}
 		data = append(data, v) // 丢包率满足条件时，添加到新数组中
 	}
-	return
+	return data
 }
 
 // Len 实现sort接口
