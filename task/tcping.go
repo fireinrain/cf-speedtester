@@ -138,6 +138,5 @@ func (p *Ping) tcpingHandler(ip *net.IPAddr) {
 }
 
 func (p *Ping) printInitTestInfo(httpingModeStr string) {
-	message := fmt.Sprintf("开始延迟测速（模式：%s，端口：%d，平均延迟上限：%v ms，平均延迟下限：%v ms，丢包几率上限：%.2f )\n", httpingModeStr, p.globalConfig.TCPPort, p.globalConfig.MaxDelay.Milliseconds(), p.globalConfig.MinDelay.Milliseconds(), p.globalConfig.MaxLossRate)
-	log.Println(message)
+	log.Printf("开始延迟测速（模式：%s，端口：%d，平均延迟上限：%v ms，平均延迟下限：%v ms，丢包几率上限：%.2f )\n", httpingModeStr, p.globalConfig.TCPPort, p.globalConfig.MaxDelay.Milliseconds(), p.globalConfig.MinDelay.Milliseconds(), p.globalConfig.MaxLossRate)
 }

@@ -49,8 +49,7 @@ func TestDownloadSpeed(ipSet utils.PingDelaySet, globalConfig *entity.TestOption
 	if testNum < globalConfig.TestCount {
 		globalConfig.TestCount = testNum
 	}
-	message := fmt.Sprintf("开始下载测速（下载速度下限：%.2f MB/s，下载测速数量：%d，下载测速队列：%d）：\n", globalConfig.MinSpeed, globalConfig.TestCount, testNum)
-	log.Println(message)
+	log.Printf("开始下载测速（下载速度下限：%.2f MB/s，下载测速数量：%d，下载测速队列：%d\n", globalConfig.MinSpeed, globalConfig.TestCount, testNum)
 
 	for i := 0; i < testNum; i++ {
 		speed := downloadHandler(ipSet[i].IP, globalConfig)
