@@ -9,6 +9,14 @@ so, here is the project.
 
 
 # how to use
+## add this lib to you golang project
+```bash
+# in your project
+import (
+	"github.com/fireinrain/cf-speedtester"
+)
+
+```
 
 ## simple use(use cloudflare official cdn ips)
 ```go
