@@ -85,7 +85,7 @@ fmt.Println(result)
 
 ```
 
-# Special thanks 
+# special thanks 
 - CloudflareSpeedTest,Thanks very much !
 - Jetbrains Goland IDE, Thanks very much !
 
