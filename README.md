@@ -3,7 +3,7 @@ A golang library to use cloudflare speed test function. use it in your own golan
 
 # why you write this golang library
 I want to use cloudflare cdn ip speed test in my own project.
-there are a command-line tool called [CloudflareSpeedTest](https://github.com/XIU2/CloudflareSpeedTest), but if 
+there is a command-line tool called [CloudflareSpeedTest](https://github.com/XIU2/CloudflareSpeedTest), but if 
 you want to use in your own project,you need wrap it as a bash call.
 so, here is the project.
 
