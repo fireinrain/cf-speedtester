@@ -136,7 +136,7 @@ func NewTestOptions(opt ...TestOptionFunc) entity.TestOptions {
 		opts.IPsArev6 = opts.DefaultValues.DefaultIPsArev6
 	}
 	if len(opts.IPListForTest) <= 0 {
-		if opts.IPsArev6 {
+		if !opts.IPsArev6 {
 			//初始化v4 ips
 			globalCFIPs := cdn.GlobalCFIPs
 			ranges := utils.LoadIPRanges(globalCFIPs.Ipv4Range, opts.TestAllIP)
