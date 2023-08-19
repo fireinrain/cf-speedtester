@@ -77,9 +77,9 @@ fmt.Println(result)
 
 ```
 
-# Special thanks to CloudflareSpeedTest project
-CloudflareSpeedTest,Thanks very much !
-Jetbrains Goland IDE, Thanks very much !
+# Special thanks 
+- CloudflareSpeedTest,Thanks very much !
+- Jetbrains Goland IDE, Thanks very much !
 
 
 
