@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	PrintNum = 10
+	PrintNum = 30
 )
 
 type PingData struct {
