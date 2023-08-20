@@ -22,6 +22,7 @@ const GeoIPGitRepoUrl = "https://github.com/Loyalsoldier/geoip"
 const RepoOwner = "Loyalsoldier"
 const RepoName = "geoip"
 const GEOIPFileMainName = "Country.mmdb"
+const DefaultGeoIPRepoTag = "202308170052"
 
 //"https://ghproxy.com/https://github.com/Loyalsoldier/geoip/releases/download/202308170052/Country.mmdb"
 
@@ -135,12 +136,15 @@ func (repo *GeoIPGitRepo) GetRepoLatestTag() Release {
 	resp, err := http.Get(url)
 	if err != nil {
 		log.Println("GetRepoLatestTag Error:", err)
+		//set default value
+		release.TagName = DefaultGeoIPRepoTag
 		return release
 	}
 	defer resp.Body.Close()
 
 	if err := json.NewDecoder(resp.Body).Decode(&release); err != nil {
 		log.Println("Error decoding JSON:", err)
+		release.TagName = DefaultGeoIPRepoTag
 		return release
 	}
 	repo.LatestTagName = release.TagName
