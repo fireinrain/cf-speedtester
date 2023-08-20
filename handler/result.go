@@ -79,18 +79,27 @@ func (s PingDelaySet) FilterWantedISOIP(globalConfig *entity.TestOptions) (data 
 		return s
 	}
 	//如果设置了ISO国家过滤
-	ISOSet := make(map[string]bool)
+	ISOSet := make(map[string][]CloudflareIPData)
 	for _, s := range globalConfig.WantedISOIP {
-		ISOSet[s] = true
+		var ipList []CloudflareIPData
+		ISOSet[s] = ipList
 	}
 
 	for _, v := range s {
 		code := geoip.GlobalGeoIPClient.GetIPISOCode(v.IP.String())
-		_, exists := ISOSet[code]
+		ipList, exists := ISOSet[code]
 		if exists {
-			data = append(data, v) // 延迟满足条件时，添加到新数组中
+			ipList = append(ipList, v) // 延迟满足条件时，添加到新数组中
+			ISOSet[code] = ipList
 		}
 	}
+	for _, s := range globalConfig.WantedISOIP {
+		ipDatas := ISOSet[s]
+		for _, ipData := range ipDatas {
+			data = append(data, ipData)
+		}
+	}
+
 	return data
 }
 

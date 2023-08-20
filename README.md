@@ -151,7 +151,8 @@ client := NewCFSpeedTestClient(
     config.WithTestCount(1),
     config.WithIPListForTest(ipList),
     // i want to get the cdn ip belongs to NL(Netherlands ISO code)
-    config.WithWantedISOIP([]string{"NL"}),
+	// the priority is lowered sequentially
+    config.WithWantedISOIP([]string{"NL","US"}),
     config.WithEnableIPBanCheck(true),
     config.WithIPBanChecker(YouselfIPBanChecker),
 )
