@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/csv"
+	"encoding/json"
 	"github.com/fireinrain/cf-speedtester/entity"
 	"log"
 	"net"
@@ -15,16 +16,16 @@ var (
 )
 
 type PingData struct {
-	IP       *net.IPAddr
-	Sended   int
-	Received int
-	Delay    time.Duration
+	IP       *net.IPAddr   `json:"ip"`
+	Sended   int           `json:"sended"`
+	Received int           `json:"received"`
+	Delay    time.Duration `json:"delay"`
 }
 
 type CloudflareIPData struct {
 	*PingData
-	lossRate      float32
-	DownloadSpeed float64
+	lossRate      float32 `json:"lossRate"`
+	DownloadSpeed float64 `json:"downloadSpeed"`
 }
 
 // GetLossRate
@@ -141,6 +142,7 @@ func (s PingDelaySet) Swap(i, j int) {
 //	@param globalConfig
 //	@return data
 func (s PingDelaySet) FilterIPBan(globalConfig *entity.TestOptions) (data PingDelaySet) {
+	log.Println("FilterIPBan values size before: ", s.Len())
 	if globalConfig.EnableIPBanCheck == false {
 		return s
 	} else {
@@ -148,7 +150,12 @@ func (s PingDelaySet) FilterIPBan(globalConfig *entity.TestOptions) (data PingDe
 			checker := globalConfig.IPBanChecker
 			result := checker(s)
 			if pingDelaySetValue, ok := result.(PingDelaySet); ok {
-				log.Println("FilterIPBan values are :", pingDelaySetValue)
+				log.Println("FilterIPBan values size after: ", pingDelaySetValue.Len())
+				if pingDelaySetValue.Len() > 0 {
+					if sampleData, err := json.Marshal(pingDelaySetValue[0]); err == nil {
+						log.Println("FilterIPBan values sample picked is :", string(sampleData), "...")
+					}
+				}
 				return pingDelaySetValue
 			} else {
 				log.Println("FilterIPBan filter failed :", s, ", discard FilterIPBan and return original values")
