@@ -151,7 +151,7 @@ func (s PingDelaySet) FilterIPBan(globalConfig *entity.TestOptions) (data PingDe
 				log.Println("FilterIPBan values are :", pingDelaySetValue)
 				return pingDelaySetValue
 			} else {
-				log.Println("FilterIPBan filter failed :", pingDelaySetValue, ", discard FilterIPBan and return original values")
+				log.Println("FilterIPBan filter failed :", s, ", discard FilterIPBan and return original values")
 			}
 		}
 	}
