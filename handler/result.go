@@ -170,14 +170,14 @@ func (s PingDelaySet) FilterIPBan(globalConfig *entity.TestOptions) (data PingDe
 		if globalConfig.IPBanChecker != nil {
 			checker := globalConfig.IPBanChecker
 			result := checker(s)
-			if pingDelaySetValue, ok := result.(PingDelaySet); ok {
-				log.Println("FilterIPBan values size after: ", pingDelaySetValue.Len())
-				if pingDelaySetValue.Len() > 0 {
-					if sampleData, err := json.Marshal(pingDelaySetValue[0]); err == nil {
+			if convertedValue, ok := result.([]CloudflareIPData); ok {
+				log.Println("FilterIPBan values size after: ", len(convertedValue))
+				if len(convertedValue) > 0 {
+					if sampleData, err := json.Marshal(convertedValue[0]); err == nil {
 						log.Println("FilterIPBan values sample picked is :", string(sampleData), "...")
 					}
 				}
-				return pingDelaySetValue
+				return convertedValue
 			} else {
 				log.Println("FilterIPBan filter failed :", s, ", discard FilterIPBan and return original values")
 			}
