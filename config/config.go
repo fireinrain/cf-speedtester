@@ -52,6 +52,7 @@ const (
 var DefaultIpBanChecker = func(some any) any {
 	return some
 }
+var DefaultWantedISOIP []string
 
 // DefaultIPListForTest 测试IP列表
 //var DefaultIPListForTest []*net.IPAddr
@@ -84,6 +85,7 @@ func NewTestOptions(opt ...TestOptionFunc) entity.TestOptions {
 		DefaultTestAllIP:         DefaultTestAllIP,
 		DefaultEnableIPBanCheck:  DefaultEnableIPBanCheck,
 		DefaultIPBanChecker:      DefaultIpBanChecker,
+		DefaultWantedISOIP:       DefaultWantedISOIP,
 	}
 	opts.DefaultValues = defaultValues
 
@@ -161,6 +163,10 @@ func NewTestOptions(opt ...TestOptionFunc) entity.TestOptions {
 	}
 	if opts.IPBanChecker == nil {
 		opts.IPBanChecker = DefaultIpBanChecker
+	}
+
+	if opts.WantedISOIP == nil || len(opts.WantedISOIP) <= 0 {
+		opts.WantedISOIP = DefaultWantedISOIP
 	}
 
 	return opts
@@ -307,5 +313,11 @@ func WithEnableIPBanCheck(enableIPBanCheck bool) TestOptionFunc {
 func WithIPBanChecker(ipBanCheckerFunc func(some any) any) TestOptionFunc {
 	return func(o *entity.TestOptions) {
 		o.IPBanChecker = ipBanCheckerFunc
+	}
+}
+
+func WithWantedISOIP(wantedISOIP []string) TestOptionFunc {
+	return func(o *entity.TestOptions) {
+		o.WantedISOIP = wantedISOIP
 	}
 }

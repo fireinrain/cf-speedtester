@@ -38,7 +38,9 @@ func (s *CFSpeedTester) DoSpeedTest() {
 	//延迟关闭geoip db
 	defer geoip.GlobalGeoIPClient.GeoIPDb.Close()
 	// 开始延迟测速 + 过滤延迟/丢包
-	pingData := task.NewPing(&s.TestOpts).Run().FilterDelay(&s.TestOpts).
+	pingData := task.NewPing(&s.TestOpts).Run().
+		FilterWantedISOIP(&s.TestOpts).
+		FilterDelay(&s.TestOpts).
 		FilterLossRate(&s.TestOpts).
 		FilterIPBan(&s.TestOpts)
 	// 开始下载测速

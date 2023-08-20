@@ -55,6 +55,7 @@ func TestDownloadSpeed(ipSet handler.PingDelaySet, globalConfig *entity.TestOpti
 		speed := downloadHandler(ipSet[i].IP, globalConfig)
 		ipSet[i].DownloadSpeed = speed
 		// 在每个 IP 下载测速后，以 [下载速度下限] 条件过滤结果
+		//float64 比较大小？
 		if speed >= globalConfig.MinSpeed*1024*1024 {
 			speedSet = append(speedSet, ipSet[i])        // 高于下载速度下限时，添加到新数组中
 			if len(speedSet) == globalConfig.TestCount { // 凑够满足条件的 IP 时（下载测速数量 -dn），就跳出循环
@@ -62,12 +63,13 @@ func TestDownloadSpeed(ipSet handler.PingDelaySet, globalConfig *entity.TestOpti
 			}
 		}
 	}
+	speedTestSet = handler.DownloadSpeedSet(ipSet)
+
 	if len(speedSet) == 0 {
 		// 没有符合速度限制的数据，返回所有测试数据?
 		// fix 当没有符合速度限制的数据时 返回空数组，打印提示 并打印测试数据
 		log.Println("当前测试ip列表没有找到速度限制的数据...")
 
-		speedTestSet = handler.DownloadSpeedSet(ipSet)
 		return speedTestSet, speedSet
 
 	}

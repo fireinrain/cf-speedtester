@@ -4,6 +4,7 @@ import (
 	"encoding/csv"
 	"encoding/json"
 	"github.com/fireinrain/cf-speedtester/entity"
+	"github.com/fireinrain/cf-speedtester/geoip"
 	"log"
 	"net"
 	"os"
@@ -72,6 +73,26 @@ func ConvertToString(data []CloudflareIPData) [][]string {
 
 // PingDelaySet 延迟丢包排序
 type PingDelaySet []CloudflareIPData
+
+func (s PingDelaySet) FilterWantedISOIP(globalConfig *entity.TestOptions) (data PingDelaySet) {
+	if globalConfig.WantedISOIP == nil || len(globalConfig.WantedISOIP) <= 0 {
+		return s
+	}
+	//如果设置了ISO国家过滤
+	ISOSet := make(map[string]bool)
+	for _, s := range globalConfig.WantedISOIP {
+		ISOSet[s] = true
+	}
+
+	for _, v := range s {
+		code := geoip.GlobalGeoIPClient.GetIPISOCode(v.IP.String())
+		_, exists := ISOSet[code]
+		if exists {
+			data = append(data, v) // 延迟满足条件时，添加到新数组中
+		}
+	}
+	return data
+}
 
 // FilterDelay
 //

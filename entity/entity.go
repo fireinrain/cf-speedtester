@@ -69,6 +69,8 @@ type TestOptions struct {
 	EnableIPBanCheck bool `json:"enableIpBanCheck"`
 	//ip ban检测器
 	IPBanChecker func(any2 any) any `json:"ip_ban_checker"`
+	//指定所属国家的ip (ISO)
+	WantedISOIP []string `json:"wantedISOIP"`
 }
 
 type SpeedTestDefaultValues struct {
@@ -110,4 +112,6 @@ type SpeedTestDefaultValues struct {
 	DefaultEnableIPBanCheck bool
 	//ip ban检测器
 	DefaultIPBanChecker func(any2 any) any
+	//指定所属国家的ip (ISO)
+	DefaultWantedISOIP []string `json:"wantedISOIP"`
 }

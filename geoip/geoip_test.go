@@ -38,3 +38,8 @@ func TestGeoIPGitRepo_GEOIPInfo(t *testing.T) {
 	//fmt.Printf("Coordinates: %v, %v\n", record.Location.Latitude, record.Location.Longitude)
 
 }
+
+func TestName(t *testing.T) {
+	var age []string
+	fmt.Println(age == nil)
+}
