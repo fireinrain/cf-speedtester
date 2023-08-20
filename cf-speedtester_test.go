@@ -61,3 +61,37 @@ func TestNewCFSpeedTestClient(t *testing.T) {
 	fmt.Println(result)
 
 }
+
+func TestIPBanedInChina(t *testing.T) {
+	var ips = []string{
+		"193.122.125.193",
+		"193.122.119.93",
+		"193.122.119.34",
+		"193.122.108.223",
+		"193.122.114.201",
+		"193.122.114.63",
+		"193.122.121.37",
+		"193.122.113.19",
+	}
+	var ipList []*net.IPAddr
+	for _, ip := range ips {
+		addr := utils.IPStrToIPAddr(ip)
+		ipList = append(ipList, addr)
+	}
+
+	client := NewCFSpeedTestClient(
+		config.WithMaxDelay(300*time.Millisecond),
+		config.WithMinSpeed(2),
+		config.WithTestCount(1),
+		config.WithIPListForTest(ipList),
+		config.WithEnableIPBanCheck(true),
+		config.WithIPBanChecker(YouselfIPBanChecker),
+	)
+	result := client.DoSpeedTestForResult()
+	fmt.Println(result)
+}
+
+func YouselfIPBanChecker(some any) any {
+	//do you check logic
+	return some
+}

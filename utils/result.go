@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/csv"
-	"fmt"
 	"github.com/fireinrain/cf-speedtester/entity"
 	"log"
 	"net"
@@ -152,7 +151,7 @@ func (s PingDelaySet) FilterIPBan(globalConfig *entity.TestOptions) (data PingDe
 				log.Println("FilterIPBan values are :", pingDelaySetValue)
 				return pingDelaySetValue
 			} else {
-				fmt.Println("FilterIPBan filter failed :", pingDelaySetValue)
+				log.Println("FilterIPBan filter failed :", pingDelaySetValue, ", discard FilterIPBan and return original values")
 			}
 		}
 	}
