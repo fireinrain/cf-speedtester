@@ -38,6 +38,8 @@ func (s *CFSpeedTester) DoSpeedTest() {
 	pingData := task.NewPing(&s.TestOpts).Run().FilterDelay(&s.TestOpts).FilterLossRate(&s.TestOpts)
 	// 开始下载测速
 	speedData := task.TestDownloadSpeed(pingData, &s.TestOpts)
+	//格式化输出结果
+	speedData.PrettyPrint()
 	var speedResults []entity.SpeedResult
 	for _, data := range speedData {
 		result := entity.SpeedResult{
