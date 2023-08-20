@@ -96,14 +96,14 @@ func YouselfIPBanChecker(some any) any{
 	return some
 }
 var ips = []string{
-"193.122.125.193",
-"193.122.119.93",
-"193.122.119.34",
-"193.122.108.223",
-"193.122.114.201",
-"193.122.114.63",
-"193.122.121.37",
-"193.122.113.19",
+    "193.122.125.193",
+    "193.122.119.93",
+    "193.122.119.34",
+    "193.122.108.223",
+    "193.122.114.201",
+    "193.122.114.63",
+    "193.122.121.37",
+    "193.122.113.19",
 }
 var ipList []*net.IPAddr
 for _, ip := range ips {
@@ -112,15 +112,52 @@ for _, ip := range ips {
 }
 
 client := cf_speedtester.NewCFSpeedTestClient(
-config.WithMaxDelay(300*time.Millisecond),
-config.WithMinSpeed(2),
-config.WithTestCount(1),
-config.WithIPListForTest(ipList),
-config.WithEnableIPBanCheck(true),
-config.WithIPBanChecker(YouselfIPBanChecker),
+    config.WithMaxDelay(300*time.Millisecond),
+    config.WithMinSpeed(2),
+    config.WithTestCount(1),
+    config.WithIPListForTest(ipList),
+    config.WithEnableIPBanCheck(true),
+    config.WithIPBanChecker(YouselfIPBanChecker),
 )
 result := client.DoSpeedTestForResult()
 fmt.Println(result)
+
+```
+
+## if i want to get specific country ip, what should i do?
+```go
+// you can do like this
+
+var ips = []string{
+    "193.122.125.193",
+    "193.122.119.93",
+    "193.122.119.34",
+    "193.122.108.223",
+    "193.122.114.201",
+    "193.122.114.63",
+    "193.122.121.37",
+    "193.122.113.19",
+    "146.70.175.116",
+}
+var ipList []*net.IPAddr
+for _, ip := range ips {
+    addr := handler.IPStrToIPAddr(ip)
+    ipList = append(ipList, addr)
+}
+
+client := NewCFSpeedTestClient(
+    config.WithMaxDelay(300*time.Millisecond),
+    config.WithMinSpeed(2),
+    config.WithTestCount(1),
+    config.WithIPListForTest(ipList),
+    // i want to get the cdn ip belongs to NL(Netherlands ISO code)
+    config.WithWantedISOIP([]string{"NL"}),
+    config.WithEnableIPBanCheck(true),
+    config.WithIPBanChecker(YouselfIPBanChecker),
+)
+result := client.DoSpeedTestForResult()
+fmt.Println(result)
+
 
 ```
 
