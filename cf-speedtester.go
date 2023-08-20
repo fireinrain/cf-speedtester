@@ -35,7 +35,9 @@ func NewCFSpeedTestClient(testOpts ...config.TestOptionFunc) *CFSpeedTester {
 //	@receiver s
 func (s *CFSpeedTester) DoSpeedTest() {
 	// 开始延迟测速 + 过滤延迟/丢包
-	pingData := task.NewPing(&s.TestOpts).Run().FilterDelay(&s.TestOpts).FilterLossRate(&s.TestOpts)
+	pingData := task.NewPing(&s.TestOpts).Run().FilterDelay(&s.TestOpts).
+		FilterLossRate(&s.TestOpts).
+		FilterIPBan(&s.TestOpts)
 	// 开始下载测速
 	speedData := task.TestDownloadSpeed(pingData, &s.TestOpts)
 	//格式化输出结果

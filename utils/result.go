@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/csv"
+	"fmt"
 	"github.com/fireinrain/cf-speedtester/entity"
 	"log"
 	"net"
@@ -133,6 +134,30 @@ func (s PingDelaySet) Swap(i, j int) {
 }
 
 //////////////////////////////// 实现sort结束
+
+// FilterIPBan
+//
+//	@Description: 墙内ipban 过滤
+//	@receiver s
+//	@param globalConfig
+//	@return data
+func (s PingDelaySet) FilterIPBan(globalConfig *entity.TestOptions) (data PingDelaySet) {
+	if globalConfig.EnableIPBanCheck == false {
+		return s
+	} else {
+		if globalConfig.IPBanChecker != nil {
+			checker := globalConfig.IPBanChecker
+			result := checker(s)
+			if pingDelaySetValue, ok := result.(PingDelaySet); ok {
+				log.Println("FilterIPBan values are :", pingDelaySetValue)
+				return pingDelaySetValue
+			} else {
+				fmt.Println("FilterIPBan filter failed :", pingDelaySetValue)
+			}
+		}
+	}
+	return s
+}
 
 // DownloadSpeedSet 下载速度排序
 type DownloadSpeedSet []CloudflareIPData

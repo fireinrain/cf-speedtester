@@ -45,7 +45,13 @@ const (
 	DefaultDisableDownload bool = false
 	// DefaultTestAllIP 测试所有ip
 	DefaultTestAllIP bool = false
+	// DefaultEnableIPBanCheck  默认不开启ip ban检测
+	DefaultEnableIPBanCheck bool = false
 )
+
+var DefaultIpBanChecker = func(some any) any {
+	return some
+}
 
 // DefaultIPListForTest 测试IP列表
 //var DefaultIPListForTest []*net.IPAddr
@@ -76,6 +82,8 @@ func NewTestOptions(opt ...TestOptionFunc) entity.TestOptions {
 		DefaultIPsArev6:          DefaultIPsArev6,
 		DefaultDisableDownload:   DefaultDisableDownload,
 		DefaultTestAllIP:         DefaultTestAllIP,
+		DefaultEnableIPBanCheck:  DefaultEnableIPBanCheck,
+		DefaultIPBanChecker:      DefaultIpBanChecker,
 	}
 	opts.DefaultValues = defaultValues
 
@@ -147,6 +155,12 @@ func NewTestOptions(opt ...TestOptionFunc) entity.TestOptions {
 			ranges := utils.LoadIPRanges(globalCFIPs.Ipv6Range, opts.TestAllIP)
 			opts.IPListForTest = ranges
 		}
+	}
+	if opts.EnableIPBanCheck == false {
+		opts.EnableIPBanCheck = DefaultTestAllIP
+	}
+	if opts.IPBanChecker == nil {
+		opts.IPBanChecker = DefaultIpBanChecker
 	}
 
 	return opts
@@ -281,5 +295,17 @@ func WithDisableDownload(disableDownload bool) TestOptionFunc {
 func WithTestAllIP(testAllIP bool) TestOptionFunc {
 	return func(o *entity.TestOptions) {
 		o.TestAllIP = testAllIP
+	}
+}
+
+func WithEnableIPBanCheck(enableIPBanCheck bool) TestOptionFunc {
+	return func(o *entity.TestOptions) {
+		o.EnableIPBanCheck = enableIPBanCheck
+	}
+}
+
+func WithIPBanChecker(ipBanCheckerFunc func(some any) any) TestOptionFunc {
+	return func(o *entity.TestOptions) {
+		o.IPBanChecker = ipBanCheckerFunc
 	}
 }

@@ -65,6 +65,10 @@ type TestOptions struct {
 	DisableDownload bool `json:"disableDownload"`
 	//测速全部 IP
 	TestAllIP bool `json:"testAllIp"`
+	//是否开启ip ban检测
+	EnableIPBanCheck bool `json:"enableIpBanCheck"`
+	//ip ban检测器
+	IPBanChecker func(any2 any) any `json:"ip_ban_checker"`
 }
 
 type SpeedTestDefaultValues struct {
@@ -102,4 +106,8 @@ type SpeedTestDefaultValues struct {
 	DefaultDisableDownload bool
 	// DefaultTestAllIP 测试所有ip
 	DefaultTestAllIP bool
+	// DefaultEnableIPBanCheck 时候开启ipban检测
+	DefaultEnableIPBanCheck bool
+	//ip ban检测器
+	DefaultIPBanChecker func(any2 any) any
 }
