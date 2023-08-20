@@ -7,6 +7,7 @@ import (
 	"github.com/fireinrain/cf-speedtester/geoip"
 	"github.com/fireinrain/cf-speedtester/handler"
 	"github.com/fireinrain/cf-speedtester/task"
+	"log"
 	"sync"
 	"time"
 )
@@ -46,7 +47,10 @@ func (s *CFSpeedTester) DoSpeedTest() {
 	// 开始下载测速
 	speedTestData, speedData := task.TestDownloadSpeed(pingData, &s.TestOpts)
 	//格式化输出结果
+	log.Println("Test ip download speed info details: ")
 	speedTestData.PrettyPrint()
+	log.Println("DownloadSpeed filtered details: ")
+	speedData.PrettyPrint()
 	var speedResults []entity.SpeedResult
 	for _, data := range speedData {
 		result := entity.SpeedResult{
