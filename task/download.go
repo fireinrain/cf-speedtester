@@ -33,10 +33,10 @@ func checkDownloadDefault(globalConfig *entity.TestOptions) {
 	}
 }
 
-func TestDownloadSpeed(ipSet handler.PingDelaySet, globalConfig *entity.TestOptions) (speedSet handler.DownloadSpeedSet) {
+func TestDownloadSpeed(ipSet handler.PingDelaySet, globalConfig *entity.TestOptions) (speedTestSet handler.DownloadSpeedSet, speedSet handler.DownloadSpeedSet) {
 	checkDownloadDefault(globalConfig)
 	if globalConfig.DisableDownload {
-		return handler.DownloadSpeedSet(ipSet)
+		return handler.DownloadSpeedSet(ipSet), handler.DownloadSpeedSet(ipSet)
 	}
 	if len(ipSet) <= 0 { // IP数组长度(IP数量) 大于 0 时才会继续下载测速
 		log.Println("延迟测速结果 IP 数量为 0，跳过下载测速.")
@@ -62,12 +62,18 @@ func TestDownloadSpeed(ipSet handler.PingDelaySet, globalConfig *entity.TestOpti
 			}
 		}
 	}
-	if len(speedSet) == 0 { // 没有符合速度限制的数据，返回所有测试数据
-		speedSet = handler.DownloadSpeedSet(ipSet)
+	if len(speedSet) == 0 {
+		// 没有符合速度限制的数据，返回所有测试数据?
+		// fix 当没有符合速度限制的数据时 返回空数组，打印提示 并打印测试数据
+		log.Println("当前测试ip列表没有找到速度限制的数据...")
+
+		speedTestSet = handler.DownloadSpeedSet(ipSet)
+		return speedTestSet, speedSet
+
 	}
 	// 按速度排序
 	sort.Sort(speedSet)
-	return speedSet
+	return speedTestSet, speedSet
 }
 
 func getDialContext(ip *net.IPAddr, globalConfig *entity.TestOptions) func(ctx context.Context, network, address string) (net.Conn, error) {

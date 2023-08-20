@@ -42,9 +42,9 @@ func (s *CFSpeedTester) DoSpeedTest() {
 		FilterLossRate(&s.TestOpts).
 		FilterIPBan(&s.TestOpts)
 	// 开始下载测速
-	speedData := task.TestDownloadSpeed(pingData, &s.TestOpts)
+	speedTestData, speedData := task.TestDownloadSpeed(pingData, &s.TestOpts)
 	//格式化输出结果
-	speedData.PrettyPrint()
+	speedTestData.PrettyPrint()
 	var speedResults []entity.SpeedResult
 	for _, data := range speedData {
 		result := entity.SpeedResult{
