@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/VividCortex/ewma"
 	"github.com/fireinrain/cf-speedtester/entity"
-	"github.com/fireinrain/cf-speedtester/utils"
+	"github.com/fireinrain/cf-speedtester/handler"
 	"io"
 	"log"
 	"net"
@@ -33,10 +33,10 @@ func checkDownloadDefault(globalConfig *entity.TestOptions) {
 	}
 }
 
-func TestDownloadSpeed(ipSet utils.PingDelaySet, globalConfig *entity.TestOptions) (speedSet utils.DownloadSpeedSet) {
+func TestDownloadSpeed(ipSet handler.PingDelaySet, globalConfig *entity.TestOptions) (speedSet handler.DownloadSpeedSet) {
 	checkDownloadDefault(globalConfig)
 	if globalConfig.DisableDownload {
-		return utils.DownloadSpeedSet(ipSet)
+		return handler.DownloadSpeedSet(ipSet)
 	}
 	if len(ipSet) <= 0 { // IP数组长度(IP数量) 大于 0 时才会继续下载测速
 		log.Println("延迟测速结果 IP 数量为 0，跳过下载测速.")
@@ -63,7 +63,7 @@ func TestDownloadSpeed(ipSet utils.PingDelaySet, globalConfig *entity.TestOption
 		}
 	}
 	if len(speedSet) == 0 { // 没有符合速度限制的数据，返回所有测试数据
-		speedSet = utils.DownloadSpeedSet(ipSet)
+		speedSet = handler.DownloadSpeedSet(ipSet)
 	}
 	// 按速度排序
 	sort.Sort(speedSet)
@@ -72,7 +72,7 @@ func TestDownloadSpeed(ipSet utils.PingDelaySet, globalConfig *entity.TestOption
 
 func getDialContext(ip *net.IPAddr, globalConfig *entity.TestOptions) func(ctx context.Context, network, address string) (net.Conn, error) {
 	var fakeSourceAddr string
-	if utils.IsIPv4(ip.String()) {
+	if handler.IsIPv4(ip.String()) {
 		fakeSourceAddr = fmt.Sprintf("%s:%d", ip.String(), globalConfig.TCPPort)
 	} else {
 		fakeSourceAddr = fmt.Sprintf("[%s]:%d", ip.String(), globalConfig.TCPPort)

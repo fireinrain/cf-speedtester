@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/fireinrain/cf-speedtester/cdn"
 	"github.com/fireinrain/cf-speedtester/entity"
-	"github.com/fireinrain/cf-speedtester/utils"
+	"github.com/fireinrain/cf-speedtester/handler"
 	"net"
 	"strings"
 	"sync"
@@ -147,12 +147,12 @@ func NewTestOptions(opt ...TestOptionFunc) entity.TestOptions {
 		if !opts.IPsArev6 {
 			//初始化v4 ips
 			globalCFIPs := cdn.GlobalCFIPs
-			ranges := utils.LoadIPRanges(globalCFIPs.Ipv4Range, opts.TestAllIP)
+			ranges := handler.LoadIPRanges(globalCFIPs.Ipv4Range, opts.TestAllIP)
 			opts.IPListForTest = ranges
 		} else {
 			//初始化v6 ips
 			globalCFIPs := cdn.GlobalCFIPs
-			ranges := utils.LoadIPRanges(globalCFIPs.Ipv6Range, opts.TestAllIP)
+			ranges := handler.LoadIPRanges(globalCFIPs.Ipv6Range, opts.TestAllIP)
 			opts.IPListForTest = ranges
 		}
 	}

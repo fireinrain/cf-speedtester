@@ -3,7 +3,7 @@ package cf_speedtester
 import (
 	"fmt"
 	"github.com/fireinrain/cf-speedtester/config"
-	"github.com/fireinrain/cf-speedtester/utils"
+	"github.com/fireinrain/cf-speedtester/handler"
 	"net"
 	"testing"
 	"time"
@@ -47,7 +47,7 @@ func TestNewCFSpeedTestClient(t *testing.T) {
 	}
 	var ipList []*net.IPAddr
 	for _, ip := range ips {
-		addr := utils.IPStrToIPAddr(ip)
+		addr := handler.IPStrToIPAddr(ip)
 		ipList = append(ipList, addr)
 	}
 
@@ -75,7 +75,7 @@ func TestIPBanedInChina(t *testing.T) {
 	}
 	var ipList []*net.IPAddr
 	for _, ip := range ips {
-		addr := utils.IPStrToIPAddr(ip)
+		addr := handler.IPStrToIPAddr(ip)
 		ipList = append(ipList, addr)
 	}
 

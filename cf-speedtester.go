@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/fireinrain/cf-speedtester/config"
 	"github.com/fireinrain/cf-speedtester/entity"
+	"github.com/fireinrain/cf-speedtester/handler"
 	"github.com/fireinrain/cf-speedtester/task"
-	"github.com/fireinrain/cf-speedtester/utils"
 	"sync"
 	"time"
 )
@@ -76,22 +76,22 @@ func (s *CFSpeedTester) ExportToCSV(filePath string) error {
 	if s.SpeedResults == nil || len(s.SpeedResults) <= 0 {
 		return errors.New("当前未进行ip测速，暂无结果导出")
 	}
-	var cloudflareIPDatas []utils.CloudflareIPData
+	var cloudflareIPDatas []handler.CloudflareIPData
 	for _, result := range s.SpeedResults {
-		addr := utils.IPStrToIPAddr(result.IPAddress)
-		pingData := &utils.PingData{
+		addr := handler.IPStrToIPAddr(result.IPAddress)
+		pingData := &handler.PingData{
 			IP:       addr,
 			Sended:   result.Sent,
 			Received: result.Received,
 			Delay:    time.Duration(result.AvgLatency / 1000),
 		}
-		data := utils.CloudflareIPData{
+		data := handler.CloudflareIPData{
 			PingData:      pingData,
 			DownloadSpeed: result.DownloadSpeed,
 		}
 		cloudflareIPDatas = append(cloudflareIPDatas, data)
 
 	}
-	utils.ExportCSV(cloudflareIPDatas, filePath)
+	handler.ExportCSV(cloudflareIPDatas, filePath)
 	return nil
 }

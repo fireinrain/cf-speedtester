@@ -3,7 +3,7 @@ package task
 import (
 	"fmt"
 	"github.com/fireinrain/cf-speedtester/entity"
-	"github.com/fireinrain/cf-speedtester/utils"
+	"github.com/fireinrain/cf-speedtester/handler"
 	"log"
 	"net"
 	"sort"
@@ -21,7 +21,7 @@ type Ping struct {
 	wg           *sync.WaitGroup
 	m            *sync.Mutex
 	ips          []*net.IPAddr
-	pingResults  utils.PingDelaySet
+	pingResults  handler.PingDelaySet
 	control      chan bool
 	globalConfig *entity.TestOptions
 }
@@ -46,13 +46,13 @@ func NewPing(testConfig *entity.TestOptions) *Ping {
 		wg:           &sync.WaitGroup{},
 		m:            &sync.Mutex{},
 		ips:          ips,
-		pingResults:  make(utils.PingDelaySet, 0),
+		pingResults:  make(handler.PingDelaySet, 0),
 		control:      make(chan bool, testConfig.Routines),
 		globalConfig: testConfig,
 	}
 }
 
-func (p *Ping) Run() utils.PingDelaySet {
+func (p *Ping) Run() handler.PingDelaySet {
 	if len(p.ips) == 0 {
 		return p.pingResults
 	}
@@ -81,7 +81,7 @@ func (p *Ping) start(ip *net.IPAddr) {
 func (p *Ping) tcping(ip *net.IPAddr) (bool, time.Duration) {
 	startTime := time.Now()
 	var fullAddress string
-	if utils.IsIPv4(ip.String()) {
+	if handler.IsIPv4(ip.String()) {
 		fullAddress = fmt.Sprintf("%s:%d", ip.String(), p.globalConfig.TCPPort)
 	} else {
 		fullAddress = fmt.Sprintf("[%s]:%d", ip.String(), p.globalConfig.TCPPort)
@@ -110,10 +110,10 @@ func (p *Ping) checkConnection(ip *net.IPAddr) (recv int, totalDelay time.Durati
 	return
 }
 
-func (p *Ping) appendIPData(data *utils.PingData) {
+func (p *Ping) appendIPData(data *handler.PingData) {
 	p.m.Lock()
 	defer p.m.Unlock()
-	p.pingResults = append(p.pingResults, utils.CloudflareIPData{
+	p.pingResults = append(p.pingResults, handler.CloudflareIPData{
 		PingData: data,
 	})
 }
@@ -128,7 +128,7 @@ func (p *Ping) tcpingHandler(ip *net.IPAddr) {
 	if recv == 0 {
 		return
 	}
-	data := &utils.PingData{
+	data := &handler.PingData{
 		IP:       ip,
 		Sended:   p.globalConfig.PingTimes,
 		Received: recv,
