@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/fireinrain/cf-speedtester/config"
 	"github.com/fireinrain/cf-speedtester/entity"
+	"github.com/fireinrain/cf-speedtester/geoip"
 	"github.com/fireinrain/cf-speedtester/handler"
 	"github.com/fireinrain/cf-speedtester/task"
 	"sync"
@@ -34,6 +35,8 @@ func NewCFSpeedTestClient(testOpts ...config.TestOptionFunc) *CFSpeedTester {
 //	@Description: 执行cloudflare ip 速度测试
 //	@receiver s
 func (s *CFSpeedTester) DoSpeedTest() {
+	//延迟关闭geoip db
+	defer geoip.GlobalGeoIPClient.GeoIPDb.Close()
 	// 开始延迟测速 + 过滤延迟/丢包
 	pingData := task.NewPing(&s.TestOpts).Run().FilterDelay(&s.TestOpts).
 		FilterLossRate(&s.TestOpts).

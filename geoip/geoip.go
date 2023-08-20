@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"github.com/carlmjohnson/requests"
 	"github.com/fireinrain/cf-speedtester/utils"
+	"github.com/oschwald/geoip2-golang"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"strings"
@@ -29,6 +31,7 @@ var GlobalGeoIPClient GeoIPClient
 
 type GeoIPClient struct {
 	*GeoIPGitRepo
+	GeoIPDb *geoip2.Reader
 }
 
 type GeoIPGitRepo struct {
@@ -45,20 +48,39 @@ type Release struct {
 
 func init() {
 	repo := GeoIPGitRepo{}
+	release := repo.GetRepoLatestTag()
 	repo.GetCurrentGeoIPDbFileInfo()
 	//当前没有下载geoip文件
-	if repo.GeoIPDbFileName == "" {
-		_, err := repo.DownloadLatestGEOIPDb()
+	if repo.CurrentTagName != repo.LatestTagName || repo.GeoIPDbFileName == "" {
+		_, err := repo.DownloadLatestGEOIPDb(release.TagName)
 		if err != nil {
 			log.Println("Error downloading latest gepdb file: ", err.Error())
 			return
 		}
+
+	}
+	//读取到geoip2
+	db, err := geoip2.Open(repo.GeoIPDbFileName)
+	if err != nil {
+		log.Fatal(err)
 	}
 	GlobalGeoIPClient = GeoIPClient{
 		GeoIPGitRepo: &repo,
+		GeoIPDb:      db,
 	}
 
-	fmt.Println("GEOIP DB 初始化成功...")
+	log.Println("GEOIP DB 初始化成功...")
+}
+
+func (c GeoIPClient) GetIPISOCode(ipStr string) string {
+	// If you are using strings that may be invalid, check that ip is not nil
+	ip := net.ParseIP(ipStr)
+	record, err := c.GeoIPDb.City(ip)
+	if err != nil {
+		log.Println("Query geoip2 error: ", err)
+		return ""
+	}
+	return record.Country.IsoCode
 }
 
 // GetCurrentGeoIPDbFileInfo
@@ -121,19 +143,19 @@ func (repo *GeoIPGitRepo) GetRepoLatestTag() Release {
 		log.Println("Error decoding JSON:", err)
 		return release
 	}
+	repo.LatestTagName = release.TagName
 	return release
 }
 
-func (repo *GeoIPGitRepo) DownloadLatestGEOIPDb() (dbName string, err error) {
-	release := repo.GetRepoLatestTag()
-	fullFileName := fmt.Sprintf("%s-%s", GEOIPFileMainName, release.TagName)
+func (repo *GeoIPGitRepo) DownloadLatestGEOIPDb(latestTag string) (dbName string, err error) {
+	fullFileName := fmt.Sprintf("%s-%s", GEOIPFileMainName, latestTag)
 	exists := utils.FileOrDirExists(fullFileName)
 	//如果不存在 就下载最新的
 	if exists {
 		return fullFileName, nil
 	}
 
-	proxiedDownloadUrl := fmt.Sprintf(GeoIPDBUrlTemplate, ProxiedUrlPrefix, release.TagName)
+	proxiedDownloadUrl := fmt.Sprintf(GeoIPDBUrlTemplate, ProxiedUrlPrefix, latestTag)
 	ctx := context.Background()
 	err = requests.
 		URL(proxiedDownloadUrl).
@@ -146,13 +168,14 @@ func (repo *GeoIPGitRepo) DownloadLatestGEOIPDb() (dbName string, err error) {
 	}
 	log.Printf("GEOIP db文件下载成功: %s\n", fullFileName)
 	//remove old geodb file
-	err = os.Remove(repo.GeoIPDbFileName)
-	if err != nil {
-		log.Println("Remove old GEOIP file error: ", err)
-		return
+	if repo.GeoIPDbFileName != "" {
+		err = os.Remove(repo.GeoIPDbFileName)
+		if err != nil {
+			log.Println("Remove old GEOIP file error: ", err)
+		}
 	}
-	repo.LatestTagName = release.TagName
-	repo.CurrentTagName = release.TagName
+	repo.LatestTagName = latestTag
+	repo.CurrentTagName = latestTag
 	repo.GeoIPDbFileName = fullFileName
 
 	return fullFileName, nil
