@@ -11,6 +11,8 @@ so, here is the project.
 # how to use
 ## add this lib to you golang project
 ```bash
+# in terminal
+go get github.com/fireinrain/cf-speedtester@v1.0.6
 # in your project
 import (
 	"github.com/fireinrain/cf-speedtester"
@@ -93,7 +95,31 @@ is the solution.
 
 func YouselfIPBanChecker(some any) any{
 	//do you check logic
+	//notice: you need convert any to handler.PingDelaySet
+	//and with PingDelaySet,do your check logic and return
+    //checked PingDelaySet
 	return some
+}
+//here is an example of a IPBanChecker
+func DoIPBanCheck(someData any) any {
+    var result []handler.CloudflareIPData
+    //转型
+    if pingDelaySetValue, ok := someData.(handler.PingDelaySet); ok {
+        log.Println("Convert someData to PingDelaySet type success,size is :", len(pingDelaySetValue))
+        //do ip banned check
+		//DoIPBanCheckInPool if self write check logic, replaced with your check logic
+        checkerResults := DoIPBanCheckInPool(pingDelaySetValue, 3)
+        for _, checkerResult := range checkerResults {
+            if checkerResult.IsBanned == false {
+                result = append(result, *checkerResult.CheckIPAddr)
+            }
+        }
+        log.Println("Do ip banned check finished, result size is :", len(result))
+        return result
+    } else {
+        log.Println("Convert someData to PingDelaySet type failed :", someData)
+    }
+    return someData
 }
 var ips = []string{
     "193.122.125.193",
@@ -127,6 +153,8 @@ fmt.Println(result)
 ## if i want to get specific country ip, what should i do?
 ```go
 // you can do like this
+// the lib use geoip2 golang, use Country.mmdb.
+// it may not exactly, but seems work well. 
 
 var ips = []string{
     "193.122.125.193",
