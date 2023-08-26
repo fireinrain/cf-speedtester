@@ -52,6 +52,20 @@ client.ExportToCSV("results.csv")
 
 ```
 
+## use custom download url
+```go
+client := NewCFSpeedTestClient(
+    config.WithMaxDelay(300*time.Millisecond),
+    config.WithMinSpeed(2),
+    config.WithTestCount(5),
+    config.WithDownloadUrl("https://youself-download-url.com"),
+)
+result := client.DoSpeedTestForResult()
+fmt.Println(result)
+
+
+```
+
 
 ## use with self-find ips that proxied to cloudflare cdn
 ```go

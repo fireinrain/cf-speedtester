@@ -32,6 +32,17 @@ func TestCFSpeedTester_DoSpeedTestForResult(t *testing.T) {
 	fmt.Println(result)
 }
 
+func TestForCustomDownloadUrl(t *testing.T) {
+	client := NewCFSpeedTestClient(
+		config.WithMaxDelay(300*time.Millisecond),
+		config.WithMinSpeed(2),
+		config.WithTestCount(5),
+		config.WithDownloadUrl("https://youself-download-url.com"),
+	)
+	result := client.DoSpeedTestForResult()
+	fmt.Println(result)
+}
+
 func TestNewCFSpeedTestClient(t *testing.T) {
 	var ips = []string{
 		"193.122.125.193",
