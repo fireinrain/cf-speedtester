@@ -218,7 +218,7 @@ func (repo *GeoIPGitRepo) KeepLatestMmdb() {
 	}
 
 	if maxSuffixFile != "" {
-		fmt.Println("File with maximum suffix:", maxSuffixFile)
+		log.Println("File with maximum suffix:", maxSuffixFile)
 		for _, file := range files {
 			if maxSuffixFile == file.Name() || !strings.HasPrefix(file.Name(), "Country.mmdb-") {
 				continue
@@ -231,6 +231,6 @@ func (repo *GeoIPGitRepo) KeepLatestMmdb() {
 
 		}
 	} else {
-		fmt.Println("No duplicate geoip files exist.")
+		log.Println("No duplicate geoip files exist.")
 	}
 }
