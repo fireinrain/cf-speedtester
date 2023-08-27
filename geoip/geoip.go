@@ -11,6 +11,8 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -49,6 +51,7 @@ type Release struct {
 
 func init() {
 	repo := GeoIPGitRepo{}
+	repo.KeepLatestMmdb()
 	release := repo.GetRepoLatestTag()
 	repo.GetCurrentGeoIPDbFileInfo()
 	//当前没有下载geoip文件
@@ -183,4 +186,51 @@ func (repo *GeoIPGitRepo) DownloadLatestGEOIPDb(latestTag string) (dbName string
 	repo.GeoIPDbFileName = fullFileName
 
 	return fullFileName, nil
+}
+func (repo *GeoIPGitRepo) KeepLatestMmdb() {
+	currentDir, err := os.Getwd()
+	if err != nil {
+		log.Println("Error getting current directory:", err)
+		return
+	}
+	//parentDir := filepath.Dir(currentDir)
+	files, err := os.ReadDir(filepath.Join(currentDir))
+	if err != nil {
+		log.Println("Error reading directory:", err)
+		return
+	}
+	maxSuffix := -1
+	maxSuffixFile := ""
+
+	for _, file := range files {
+		if strings.HasPrefix(file.Name(), "Country.mmdb-") {
+			suffixStr := strings.TrimPrefix(file.Name(), "Country.mmdb-")
+			suffix, err := strconv.Atoi(suffixStr)
+			if err != nil {
+				continue
+			}
+
+			if suffix > maxSuffix {
+				maxSuffix = suffix
+				maxSuffixFile = file.Name()
+			}
+		}
+	}
+
+	if maxSuffixFile != "" {
+		fmt.Println("File with maximum suffix:", maxSuffixFile)
+		for _, file := range files {
+			if maxSuffixFile == file.Name() || !strings.HasPrefix(file.Name(), "Country.mmdb-") {
+				continue
+			} else {
+				err = os.Remove(filepath.Join(currentDir, file.Name()))
+				if err != nil {
+					log.Println("Remove old GEOIP file error: ", err)
+				}
+			}
+
+		}
+	} else {
+		fmt.Println("No duplicate geoip files exist.")
+	}
 }
