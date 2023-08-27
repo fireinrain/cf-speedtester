@@ -86,7 +86,13 @@ func getDialContext(ip *net.IPAddr, globalConfig *entity.TestOptions) func(ctx c
 		fakeSourceAddr = fmt.Sprintf("[%s]:%d", ip.String(), globalConfig.TCPPort)
 	}
 	return func(ctx context.Context, network, address string) (net.Conn, error) {
-		return (&net.Dialer{}).DialContext(ctx, network, fakeSourceAddr)
+		return (&net.Dialer{
+			Timeout:   30 * time.Second,
+			KeepAlive: 30 * time.Second,
+			LocalAddr: &net.TCPAddr{
+				IP: net.ParseIP(fakeSourceAddr),
+			},
+		}).DialContext(ctx, network, fakeSourceAddr)
 	}
 }
 
