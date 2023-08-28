@@ -203,6 +203,9 @@ fmt.Println(result)
 
 
 ```
+# issues?
+- download speed always 0?
+you should change the custom download url, and have a test.
 
 # special thanks 
 - CloudflareSpeedTest,Thanks very much !
