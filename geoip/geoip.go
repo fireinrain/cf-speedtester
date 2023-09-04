@@ -19,7 +19,7 @@ import (
 // geoip工具 用于过滤出想要的国家ip
 // 方便使用
 
-const ProxiedUrlPrefix = "https://ghproxy.com/"
+const ProxiedUrlPrefix = ""
 const GeoIPGitRepoUrl = "https://github.com/Loyalsoldier/geoip"
 const RepoOwner = "Loyalsoldier"
 const RepoName = "geoip"
