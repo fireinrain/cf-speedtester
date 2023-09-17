@@ -63,9 +63,9 @@ func TestNewCFSpeedTestClient(t *testing.T) {
 	}
 
 	client := NewCFSpeedTestClient(
-		config.WithMaxDelay(300*time.Millisecond),
+		config.WithMinDelay(300*time.Millisecond),
 		config.WithMinSpeed(2),
-		config.WithTestCount(1),
+		config.WithTestCount(10),
 		config.WithIPListForTest(ipList),
 	)
 	result := client.DoSpeedTestForResult()
